@@ -1,0 +1,47 @@
+import React, { useState } from "react";
+import "./Modal.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
+import { newFolder } from "../../firebaseLogics/config";
+function CreateFolder({ visible, setVisible, folderID }) {
+  let user = JSON.parse(localStorage.getItem("localUser"));
+  var dispatch = useDispatch();
+  const [data, setData] = useState({
+    folderName: "",
+    userId: user?.uid,
+    folderId: folderID,
+  });
+  function handleCreate() {
+    if (data.folderName.length <= 0) {
+      alert("name is required");
+    } else {
+      dispatch(newFolder(data));
+    }
+  }
+
+  return (
+    <div className={`modal ${visible ? "active" : ""}`}>
+      <div className="modal-inner">
+        <div className="close-modal">
+          <FontAwesomeIcon icon={faClose} onClick={() => setVisible(false)} />
+        </div>
+        <div className="content">
+          <div className="create-folder">
+            <h2>Create new folder</h2>
+            <input
+              type="text"
+              placeholder="Enter Folder Name"
+              onChange={(e) =>
+                setData((prev) => ({ ...prev, folderName: e.target.value }))
+              }
+            />
+            <button onClick={handleCreate}>Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default CreateFolder;
